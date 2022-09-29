@@ -2,14 +2,19 @@
 version: '3.1'
 
 services:
-
   mongo:
     image: mongo
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-
+      MONGO_INITDB_ROOT_USERNAME: football
+      MONGO_INITDB_ROOT_PASSWORD: mdpfootball
+  insert_data_in_db:
+    image: my_insert_data_in_db
+    container_name: my_insert_data_in_db_container
+    networks:
+      - my_mongodb_network
+    ports:
+      - 27017:27017
   mongo-express:
     image: mongo-express
     restart: always
@@ -19,3 +24,6 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+networks:
+  my_mongodb_network:
+
