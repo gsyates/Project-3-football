@@ -3,26 +3,23 @@ from pymongo import MongoClient
 from pprint import pprint
 from pymongo.errors import ConnectionFailure
 
-client = MongoClient('mongodb://172.20.0.3:27017/')
+client = MongoClient(
+    host='172.28.1.1',
+    port=27017,
+    username='football',
+    password='mdpfootball',
+    authSource='admin'
+)
 
 try:
-    # The ping command is cheap and does not require auth.
-    client.admin.command('ping')
+  print("Connection Successful")
 except ConnectionFailure:
-    print("Server not available")
+  print("Connection failed")
 
-#db = client['footballclient']
-#col = db['football']
+db = client['footballclient']
+col = db['football']
+col.insert_one({'example': 123})
+pprint(col.find_one())
 
-#pprint(col.find_one())
-#print(client)
+client.close()
 
-#from pprint import pprint
-#from pymongo import MongoClient
-
-#client = MongoClient('localhost', port=27017)
-
-#db = client.admin
-
-#server = db.command("serverStatus")
-#pprint(server)
