@@ -1,11 +1,7 @@
-from pymongo import MongoClient, mongoimport
-#from utils import get_my_password, get_my_username
+from pymongo import MongoClient
 from pprint import pprint
 from pymongo.errors import ConnectionFailure
-import pymongo
-import csv
 import pandas as pd
-import json
 
 client = MongoClient(
     host='172.28.1.1',
@@ -31,8 +27,8 @@ result=col.insert_many(data)
 #col.delete_one(filter={'_id': 1})
 print('hello gerry')
 
-query = list(col.find(filter={'Age': 27})
-pprint (query)
+query = list(col.find(filter={'Age': 27}))
+pprint(query)
 
 client.close()
 

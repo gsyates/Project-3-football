@@ -18,15 +18,28 @@ services:
     container_name: my_insert_data_in_db_container
     networks:
       - my_mongodb_network
-  mongo-express:
-    image: mongo-express
-    restart: always
+  api_football:
+    image: launchfootballapi
+    container_name: my_football_api_container
     ports:
-      - 8081:8081
+      - target: 8000
+        published: 8000
+        protocol: tcp
+        mode: host
+    networks:
+      my_mongodb_network:
+        ipv4_address: 172.28.1.2
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ip_mongodb_server: 172.28.1.1
+      LOG: 1
+  test_football_api:
+    image: testfootballapi
+    container_name: my_test_football_api
+    networks:
+      - my_mongodb_network
+    environment:
+      ip_api_server: 172.28.1.1
+      LOG: 1
 networks:
   my_mongodb_network:
     ipam:
