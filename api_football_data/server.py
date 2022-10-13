@@ -3,8 +3,11 @@ import pandas as pd
 import os
 from pymongo import MongoClient
 import pymongo
+from pprint import pprint
+from flask import make_response
 from werkzeug.exceptions import BadRequest,HTTPException, NotFound
 from pymongo.errors import ConnectionFailure
+import json
 import time
 time.sleep(3)
 
@@ -52,14 +55,20 @@ def testMongodb():
 def get_player():
     try:
         data = request.get_json()
-        if os.path.exists(data["Name"]):
-            client = db_connection()
-            col = get_col_clientdb(client)
-            query = list(col.find(filter={'Name': data["Name"]}))
-            client.close()
-            return(pprint(query))
+        client = db_connection()
+        col = get_col_clientdb(client)
+        query = list(col.find(filter={'Name': data["Name"]}))
+        return make_response(json.dumps(query,default=str))
     except ValueError:
         raise NotFound("joueur introuvable !")
+
+@server.route('/add_player', methods=["POST"])
+def add_player():
+    data = request.get_json()
+    client = db_connection()
+    col = get_col_clientdb(client)
+    results = col.insert_one({"Name": data["Name"], "Position": data["Position"], "Age": data["Age"], "Team_from": data["Team_from"], "League_from": data["League_from"], "Team_to": data["Team_to"], "League_to": data["League_to"], "Season": data["Season"], "Market_value": data["Market_value"], "Transfer_fee": data["Transfer_fee"]})
+    return make_response(json.dumps(results.inserted_id,default=str))
 
 if __name__ == '__main__':
     server.run(host='0.0.0.0', port=8000)
